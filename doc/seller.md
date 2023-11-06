@@ -53,37 +53,30 @@ Body:
 
 ```json
 {
-  "user_id": "$seller user id$",
-  "store_id": "$store id$",
+  "user_id": "seller",
+  "store_id": "111",
   "book_info": {
     "tags": [
-      "tags1",
-      "tags2",
-      "tags3",
-      "..."
+      "小说"
     ],
-    "pictures": [
-      "$Base 64 encoded bytes array1$",
-      "$Base 64 encoded bytes array2$",
-      "$Base 64 encoded bytes array3$",
-      "..."
-    ],
-    "id": "$book id$",
-    "title": "$book title$",
-    "author": "$book author$",
-    "publisher": "$book publisher$",
-    "original_title": "$original title$",
-    "translator": "translater",
-    "pub_year": "$pub year$",
-    "pages": 10,
-    "price": 10,
-    "binding": "平装",
-    "isbn": "$isbn$",
-    "author_intro": "$author introduction$",
-    "book_intro": "$book introduction$",
-    "content": "$chapter1 ...$"
-  },
-  "stock_level": 0
+    "pictures": [],
+    "id": "123456",
+  	"title": "示例图书",
+  	"author": "示例作者",
+  	"publisher": "示例出版社",
+    "original_title": "Sample Original Title",
+    "translator": "Sample Translator",
+    "pub_year": "2023",
+    "pages": 300,
+    "price": 1999,
+    "currency_unit": "CNY",
+    "binding": "精装",
+    "isbn": "978-1234567890",
+    "author_intro": "这是示例作者的简介。",
+    "book_intro": "这是示例图书的简介。",
+    "content": "这是示例图书的内容。"
+    },
+    "stock_level": 0
 }
 
 ```
