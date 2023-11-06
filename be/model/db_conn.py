@@ -55,3 +55,8 @@ class DBConn:
         user_store_collection = self.db["user_store"]
         user_store_doc = user_store_collection.find_one({"store_id": store_id})
         return user_store_doc is not None
+
+    def book_id_exist_in_all(self, book_id):
+        store_collection = self.db["book"]
+        store_doc = store_collection.find_one({"id": book_id})
+        return store_doc is not None

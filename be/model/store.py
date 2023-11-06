@@ -3,7 +3,7 @@ import os
 import pymongo
 import logging
 import os
-import sqlite3 as sqlite
+
 
 
 class Store:
@@ -12,8 +12,19 @@ class Store:
         self.db = self.client["bookstore"]
 
     def init_tables(self):
-        pass
-        # 不需要创建表格，MongoDB 是无模式的数据库
+        self.db['book'].create_index([
+            ('id', pymongo.ASCENDING),
+            ('title', 'text'),
+            ('author', 'text'),
+            ('publisher', 'text'),
+            ('isbn', 'text'),
+            ('content', 'text'),
+            ('tags', 'text'),
+            ('book_intro', 'text'),
+        ],
+            default_language="chinese",
+            weights={'title': 2, 'author': 2, 'isbn': 2}
+        )
 
     # def get_db_conn(self):
     #     pass

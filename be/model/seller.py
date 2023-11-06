@@ -1,83 +1,10 @@
 import json
 from datetime import datetime
-
-# class Seller(db_conn.DBConn):
-#     def __init__(self):
-#         db_conn.DBConn.__init__(self)
-#
-#     def add_book(
-#         self,
-#         user_id: str,
-#         store_id: str,
-#         book_id: str,
-#         book_json_str: str,
-#         stock_level: int,
-#     ):
-#         try:
-#             if not self.user_id_exist(user_id):
-#                 return error.error_non_exist_user_id(user_id)
-#             if not self.store_id_exist(store_id):
-#                 return error.error_non_exist_store_id(store_id)
-#             if self.book_id_exist(store_id, book_id):
-#                 return error.error_exist_book_id(book_id)
-#
-#             self.conn.execute(
-#                 "INSERT into store(store_id, book_id, book_info, stock_level)"
-#                 "VALUES (?, ?, ?, ?)",
-#                 (store_id, book_id, book_json_str, stock_level),
-#             )
-#             self.conn.commit()
-#         except sqlite.Error as e:
-#             return 528, "{}".format(str(e))
-#         except BaseException as e:
-#             return 530, "{}".format(str(e))
-#         return 200, "ok"
-#
-#     def add_stock_level(
-#         self, user_id: str, store_id: str, book_id: str, add_stock_level: int
-#     ):
-#         try:
-#             if not self.user_id_exist(user_id):
-#                 return error.error_non_exist_user_id(user_id)
-#             if not self.store_id_exist(store_id):
-#                 return error.error_non_exist_store_id(store_id)
-#             if not self.book_id_exist(store_id, book_id):
-#                 return error.error_non_exist_book_id(book_id)
-#
-#             self.conn.execute(
-#                 "UPDATE store SET stock_level = stock_level + ? "
-#                 "WHERE store_id = ? AND book_id = ?",
-#                 (add_stock_level, store_id, book_id),
-#             )
-#             self.conn.commit()
-#         except sqlite.Error as e:
-#             return 528, "{}".format(str(e))
-#         except BaseException as e:
-#             return 530, "{}".format(str(e))
-#         return 200, "ok"
-#
-#     def create_store(self, user_id: str, store_id: str) -> (int, str):
-#         try:
-#             if not self.user_id_exist(user_id):
-#                 return error.error_non_exist_user_id(user_id)
-#             if self.store_id_exist(store_id):
-#                 return error.error_exist_store_id(store_id)
-#             self.conn.execute(
-#                 "INSERT into user_store(store_id, user_id)" "VALUES (?, ?)",
-#                 (store_id, user_id),
-#             )
-#             self.conn.commit()
-#         except sqlite.Error as e:
-#             return 528, "{}".format(str(e))
-#         except BaseException as e:
-#             return 530, "{}".format(str(e))
-#         return 200, "ok"
-
-
 import pymongo
 from be.model import error
 from be.model import db_conn
-
+from base64 import b64decode
+from bson.binary import Binary
 
 class Seller(db_conn.DBConn):
     def __init__(self):
@@ -100,43 +27,57 @@ class Seller(db_conn.DBConn):
                 return error.error_exist_book_id(book_id)
 
             store_collection = self.db["store"]
-            # store_data = {
-            #     "store_id": store_id,
-            #     "book_id": book_id,
-            #     "stock_level": stock_level
-            # }
-
             store_data = {
                 "store_id": store_id,
                 "book_id": book_id,
-                # "book_info": json.loads(book_json_str),
+                "price" : json.loads(book_json_str)['price'],
                 "stock_level": stock_level
             }
-            # print(1)
+
+            # store_data = {
+            #     "store_id": store_id,
+            #     "book_id": book_id,
+            #     "book_info": json.loads(book_json_str),
+            #     "stock_level": stock_level
+            # }
+
+
             store_collection.insert_one(store_data)
-            # print(2)
+
             book_collection = self.db["book"]
-            # print(book_json_str)
-            # print(type(book_json_str))
+
             book_data = json.loads(book_json_str)
-            # print(3)
 
-            for key in list(book_data.keys()):
-                # print(key)
-                if key not in ["id", "title", "author", "publisher", "original_title", "translator", "pub_year",
-                               "pages", "price", "currency_unit", "binding", "isbn", "author_intro", "book_intro",
-                               "content", "tags"]:
-                    book_data.pop(key)
-            # print(5)
+            if not self.book_id_exist_in_all(book_data['id']):
 
-            book_collection.insert_one(book_data)
+                for key in list(book_data.keys()):
+
+                    if key not in ["id", "title", "author", "publisher", "original_title", "translator", "pub_year",
+                                   "pages", "price", "currency_unit", "binding", "isbn", "author_intro", "book_intro",
+                                   "content", "tags","pictures"]:
+                        book_data.pop(key)
+
+                    pics=[]
+                    if key=='pictures':
+                        for pic in book_data['pictures']:
+                            pics.append(Binary(b64decode(pic)))
+                        book_data['pictures'] = pics
+
+                print('oooooooooooo',type(book_data['pictures']),type(book_data['pictures'][0]))
+
+
+
+                book_collection.insert_one(book_data)
+
 
 
         except pymongo.errors.DuplicateKeyError:
             return error.error_exist_book_id(book_id)
         except pymongo.errors.PyMongoError as e:
+
             return 528, "{}".format(str(e))
         except BaseException as e:
+            print(e)
             return 530, "{}".format(str(e))
         return 200, "ok"
 
@@ -232,8 +173,12 @@ class Seller(db_conn.DBConn):
                 orders = list(
                     new_order_collection.find({"store_id": store},{"_id":0})
                 )
-                print(orders)
-                seller_orders.extend(orders)
+                for i in orders:
+                    seller_orders.append(
+                        {'store_id': i["store_id"],
+                         'order_id': i["order_id"],
+                         'status': i["status"]}
+                    )
 
             return 200, "ok", seller_orders
         except pymongo.errors.PyMongoError as e:
