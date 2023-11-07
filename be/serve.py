@@ -30,7 +30,7 @@ def be_shutdown():
 # 创建一个函数来初始化和启动定时任务
 def start_order_auto_cancel():
     scheduler = BackgroundScheduler()
-    scheduler.add_job(OrderAutoCancel().cancel_unpaid_orders, 'interval', minutes=15)  # 每隔15分钟触发一次
+    scheduler.add_job(OrderAutoCancel().cancel_unpaid_orders, 'interval', minutes=1)  # 每隔15分钟触发一次
     scheduler.start()
 
 
@@ -38,7 +38,7 @@ def be_run():
     this_path = os.path.dirname(__file__)
     parent_path = os.path.dirname(this_path)
     log_file = os.path.join(parent_path, "app.log")
-    init_database('localhost', 27017)
+    init_database('localhost',27017)
 
     logging.basicConfig(filename=log_file, level=logging.ERROR)
     handler = logging.StreamHandler()
@@ -52,6 +52,7 @@ def be_run():
     start_order_auto_cancel()
 
     app = Flask(__name__)
+    app.debug=True
     app.register_blueprint(bp_shutdown)
     app.register_blueprint(auth.bp_auth)
     app.register_blueprint(seller.bp_seller)

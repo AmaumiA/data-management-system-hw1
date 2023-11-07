@@ -7,7 +7,6 @@ class OrderAutoCancel(db_conn.DBConn):
     def __init__(self):
         db_conn.DBConn.__init__(self)
         self.cancel_timer = threading.Timer(60, self.cancel_unpaid_orders)  # 定时器每分钟执行一次
-        print('第一次启动')
         self.cancel_timer.start()
 
     def cancel_unpaid_orders(self):
@@ -29,7 +28,6 @@ class OrderAutoCancel(db_conn.DBConn):
 
         # 重新启动定时器
         self.cancel_timer = threading.Timer(60, self.cancel_unpaid_orders)
-        print('第二次启动')
         self.cancel_timer.start()
 
 
