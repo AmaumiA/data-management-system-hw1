@@ -22,7 +22,7 @@ sqlite_data = sqlite_cursor.fetchall()
 for index,row in enumerate(sqlite_data):
     if index >=30000:
         continue
-    # print(type(row[15]))
+
     book_doc = {
         "id": row[0],
         "title": row[1],
@@ -43,7 +43,6 @@ for index,row in enumerate(sqlite_data):
         "pictures": [row[16]]
         # 如果有图书封面图片字段，需要根据实际情况添加
     }
-    # print(type(book_doc['tags']))
     # exit(0)
     book_collection.insert_one(book_doc)
 

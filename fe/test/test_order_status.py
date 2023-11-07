@@ -119,9 +119,9 @@ class TestOrderStatus:
         code = self.b.receive_order(self.order_id)
         assert code != 200
 
-    # tnnd
+    # 测试定时取消功能
     def test_auto_cancel(self):
-        time.sleep(125)
+        time.sleep(120)
 
         order_info=self.b.get_order_info(self.order_id)
         assert order_info['status'] == 'cancelled'

@@ -52,7 +52,7 @@ def be_run():
     start_order_auto_cancel()
 
     app = Flask(__name__)
-    app.debug=True
+    # app.debug=True
     app.register_blueprint(bp_shutdown)
     app.register_blueprint(auth.bp_auth)
     app.register_blueprint(seller.bp_seller)

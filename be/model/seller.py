@@ -63,10 +63,6 @@ class Seller(db_conn.DBConn):
                             pics.append(Binary(b64decode(pic)))
                         book_data['pictures'] = pics
 
-                print('oooooooooooo',type(book_data['pictures']),type(book_data['pictures'][0]))
-
-
-
                 book_collection.insert_one(book_data)
 
 
@@ -77,7 +73,6 @@ class Seller(db_conn.DBConn):
 
             return 528, "{}".format(str(e))
         except BaseException as e:
-            print(e)
             return 530, "{}".format(str(e))
         return 200, "ok"
 
@@ -164,7 +159,6 @@ class Seller(db_conn.DBConn):
             user_store_collection = self.db["user_store"]
             seller_stores = [store["store_id"] for store in user_store_collection.find({"user_id": user_id})]
 
-            # print(seller_stores)
 
             new_order_collection = self.db["new_order"]
             seller_orders = []

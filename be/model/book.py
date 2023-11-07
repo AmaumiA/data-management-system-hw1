@@ -129,7 +129,7 @@ class Book(db_conn.DBConn):
             # 计算分页参数
             skip = (page - 1) * per_page
             limit = per_page
-            print(3)
+
             # 使用 find 方法执行查询，并限制结果数量
             result = book_collection.find(query, {'_id': 0}).skip(skip).limit(limit)
             tmp = []
@@ -145,7 +145,7 @@ class Book(db_conn.DBConn):
                 #     i['picture'] = encode_str
                 tmp.append(i)
             result = tmp
-            print(4)
+
 
         except pymongo.errors.PyMongoError as e:
             return 528, "{}".format(str(e))
