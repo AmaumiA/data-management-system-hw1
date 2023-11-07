@@ -212,7 +212,7 @@ class Workload:
         # 计算这段时间内新付款订单的总数目
         n_payment_diff = self.n_payment - self.n_payment_past
         n_shipment_diff = self.n_shipment - self.n_shipment_past
-        n_receive_diff = self.n_receive - self.n_receive_ok
+        n_receive_diff = self.n_receive - self.n_receive_past
 
         if (
             self.n_payment != 0

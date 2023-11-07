@@ -96,7 +96,7 @@ class BookDB:
             book.tags = row['tags']
             book.pictures = []
             pictures = row['pictures']
-            # for i in range(0, random.randint(0, 9)):
+
             for picture in pictures:
                 if picture is not None:
                     encode_str = base64.b64encode(picture).decode("utf-8")

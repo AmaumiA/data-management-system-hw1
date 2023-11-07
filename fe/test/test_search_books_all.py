@@ -1,8 +1,5 @@
 import pytest
-
-from fe.access.new_seller import register_new_seller
 from fe.access import book
-import uuid
 import random
 
 
@@ -38,7 +35,7 @@ class TestSearchBooksAll:
             for key, value in self.json.items():
                 if len(value) != 0 :
                     processed_json[key] = value
-            print('pro',processed_json)
+
             if len(processed_json.keys()) == 0:
                 return [book.id for book in self.books]
 
@@ -66,7 +63,6 @@ class TestSearchBooksAll:
         right_answer = check_ok()
         print('真实结果',len(right_answer), right_answer)
         assert len(right_answer) == len(res)
-        # check_ok()
         for i in res:
             if i not in right_answer:
                 assert False  # 搜索结果不正确
